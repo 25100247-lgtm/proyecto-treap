@@ -1,6 +1,8 @@
 package treap
 
 import (
+	"fmt"
+	"math/rand"
 	"testing"
 )
 
@@ -94,4 +96,68 @@ func validarHeap(nodo *Nodo) bool {
 		return false
 	}
 	return validarHeap(nodo.Izq) && validarHeap(nodo.Der)
+}
+
+// BENCHMARKS
+
+var dataSet []string
+var tBench *Treap
+
+func init() {
+	// 10k elementos como tamaño base representativo
+	const size = 10000
+	dataSet = make([]string, size)
+
+	r := rand.New(rand.NewSource(42))
+	for i := range size {
+		dataSet[i] = fmt.Sprintf("KEY-%06d", r.Intn(size*10))
+	}
+
+	tBench = NuevoTreap()
+	for _, k := range dataSet {
+		tBench.Insertar(k, "item-data")
+	}
+}
+
+// mide el rendimiento de inserciones individuales en un árbol limpio
+func BenchmarkInsertar(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		treap := NuevoTreap()
+		clave := dataSet[i%len(dataSet)]
+		treap.Insertar(clave, "valor")
+	}
+}
+
+// mide el costo amortizado de poblar un único treap de forma masiva
+func BenchmarkInsertarSecuencial(b *testing.B) {
+	treap := NuevoTreap()
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		clave := dataSet[i%len(dataSet)]
+		treap.Insertar(clave, "valor")
+	}
+}
+
+// mide el tiempo de búsqueda (hit/miss) en un treap ya poblado
+func BenchmarkBuscar(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		clave := dataSet[i%len(dataSet)]
+		_, _ = tBench.Buscar(clave)
+	}
+}
+
+// para evitar vaciar el árbol global, clonamos/reconstruimos el estado en baches controlados
+func BenchmarkEliminar(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		treap := NuevoTreap()
+		for j := range 100 {
+			treap.Insertar(dataSet[j], "data")
+		}
+		claveAEliminar := dataSet[i%100]
+
+		treap.Eliminar(claveAEliminar)
+	}
 }

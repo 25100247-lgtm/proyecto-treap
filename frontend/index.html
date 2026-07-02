@@ -105,7 +105,6 @@
 
   <body>
     <m3e-theme id="app" class="contenedor" color="#af1280" strong-focus>
-      <!-- Barra superior con Botón Toggle para Móviles -->
       <m3e-app-bar centered size="small">
         <img
           slot="title"
@@ -116,7 +115,6 @@
       </m3e-app-bar>
 
       <div class="app-body">
-        <!-- Container referenciado para controlar apertura programáticamente -->
         <m3e-nav-rail slot="start" id="nav-rail">
           <m3e-icon-button toggle>
             <m3e-icon name="menu"></m3e-icon>
@@ -134,11 +132,9 @@
           </m3e-nav-item>
         </m3e-nav-rail>
 
-        <!-- Contenido Escroleable Principal -->
         <m3e-content-pane>
           <div class="layout-grid">
             <div class="columna">
-              <!-- VISTA CAJA -->
               <div v-if="pestañaActiva === 'caja'" class="animate-fade section-container">
                 <m3e-heading size="large" variant="headline">Terminal de Búsqueda</m3e-heading>
                 <p class="texto-detalle text-muted">
@@ -195,7 +191,6 @@
                 </div>
               </div>
 
-              <!-- VISTA ALMACÉN -->
               <div v-if="pestañaActiva === 'almacen'" class="animate-fade section-container">
                 <m3e-heading size="large" variant="headline">Ingreso de Stock</m3e-heading>
                 <p class="texto-detalle text-muted">
@@ -244,7 +239,6 @@
                 </form>
               </div>
 
-              <!-- VISTA CATÁLOGO -->
               <div
                 v-if="pestañaActiva === 'catalogo'"
                 class="animate-fade section-container flush-padding"
